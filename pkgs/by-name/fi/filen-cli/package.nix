@@ -114,9 +114,14 @@ stdenv.mkDerivation {
     runHook postInstall
   '';
 
+  # strip removes the JS bundle from the binary
   dontStrip = true;
 
-  nativeInstallCheckInputs = [ versionCheckHook ];
+  nativeInstallCheckInputs = [
+    versionCheckHook
+    writableTmpDirAsHomeHook
+  ];
+  versionCheckKeepEnvironment = [ "HOME" ];
   preVersionCheck = ''
     cat > filen-version << EOF
     #!/bin/sh
@@ -125,16 +130,20 @@ stdenv.mkDerivation {
     chmod +x filen-version
     versionCheckProgram="$(pwd)/filen-version"
   '';
-
-  # Writes /var/empty/Library on darwin
-  doInstallCheck = !stdenv.hostPlatform.isDarwin;
+  doInstallCheck = true;
 
   meta = {
+    changelog = "https://github.com/FilenCloudDienste/filen-cli/releases/tag/v${version}";
     description = "CLI tool for interacting with the Filen cloud";
     homepage = "https://github.com/FilenCloudDienste/filen-cli";
-    changelog = "https://github.com/FilenCloudDienste/filen-cli/releases/tag/v${version}";
     license = lib.licenses.agpl3Only;
-    maintainers = with lib.maintainers; [ eilvelia ];
     mainProgram = "filen";
+    maintainers = with lib.maintainers; [ eilvelia ];
+    platforms = [
+      "aarch64-darwin"
+      "aarch64-linux"
+      "x86_64-darwin"
+      "x86_64-linux"
+    ];
   };
 }
