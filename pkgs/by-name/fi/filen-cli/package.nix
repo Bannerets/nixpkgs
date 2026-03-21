@@ -58,6 +58,8 @@ let
     outputHash =
       {
         aarch64-darwin = "sha256-+nTCiCEXsEz7YqRZkHlP3CWL7e7OPdds33BTwfqTL5c=";
+        aarch64-linux = lib.fakeHash;
+        x86_64-darwin = lib.fakeHash;
         x86_64-linux = "sha256-Ky+ewpdd5nKvRzXwEAUgT7P/OW3v6fdb2r6SGxZ/JEc=";
       }
       .${stdenv.hostPlatform.system}
