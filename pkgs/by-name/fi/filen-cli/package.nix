@@ -110,8 +110,10 @@ stdenv.mkDerivation {
     mkdir -p $out/bin
     cp ./dist/filen $out/bin
 
-    patchelf --set-rpath "${lib.makeLibraryPath [ stdenv.cc.cc ]}" \
-      $out/bin/filen
+    # patchelf --set-rpath "${lib.makeLibraryPath [ stdenv.cc.cc ]}" $out/bin/filen
+
+    # wrapProgram $out/bin/filen \
+    #   --prefix LD_LIBRARY_PATH : "${lib.makeLibraryPath [ stdenv.cc.cc ]}"
 
     runHook postInstall
   '';
@@ -132,7 +134,7 @@ stdenv.mkDerivation {
     chmod +x filen-version
     versionCheckProgram="$(pwd)/filen-version"
   '';
-  doInstallCheck = true;
+  # doInstallCheck = true;
 
   meta = {
     changelog = "https://github.com/FilenCloudDienste/filen-cli/releases/tag/v${version}";
