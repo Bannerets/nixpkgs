@@ -110,8 +110,8 @@ stdenv.mkDerivation {
     mkdir -p $out/bin
     cp ./dist/filen $out/bin
 
-    wrapProgram $out/bin/filen \
-      --prefix LD_LIBRARY_PATH : "${lib.makeLibraryPath [ stdenv.cc.cc ]}"
+    patchelf --set-rpath "${lib.makeLibraryPath [ stdenv.cc.cc ]}" \
+      $out/bin/filen
 
     runHook postInstall
   '';
